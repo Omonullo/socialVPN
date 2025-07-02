@@ -120,3 +120,26 @@ sudo systemctl status netdata
 * Ключи генерируются автоматически и не передаются третьим лицам
 * Используются IP-диапазоны сервисов для split-tunnel
 * Netdata открыт только для просмотра (без доступа к системе)
+
+
+## Как добавлять новые адреса (на примере twitter)
+
+Узнем ASN для twitter. Google скажет ASN 13414 </br>
+
+Теперь создаём айпи файл 
+>> whois -h whois.radb.net -- '-i origin ASN13414' | grep ^route | awk '{print $2}' > twitter.txt
+
+
+открывем и редайтируем файл /home/omonako/work/addaddress.sh
+
+Указываем путь нашего twitter.txt в конце вместо существующего адруса другого файла
+
+должно получится вот так
+
+>> while read ip; do   ip rule add to "$ip" table vpn; done < twitter.txt
+
+
+сохраянем и запускаем файл
+
+sudo /home/omonako/work/addaddress.sh
+
